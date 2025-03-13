@@ -30,19 +30,22 @@ jobs:
           path: test-results.txt
 
   deploy:
-    runs-on: [self-hosted, macOS]  # Runs on your self-hosted MacBook runner
-    needs: test  # Ensures tests pass before deployment
+    runs-on: [self-hosted, macOS]
+    needs: test  # Ensure tests pass before deployment
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Download test results
-        uses: actions/download-artifact@v4  # Updated to v4
+        uses: actions/download-artifact@v4
         with:
           name: test-results
 
       - name: Display test results
         run: cat test-results.txt
+
+      - name: Install PM2
+        run: npm install -g pm2
 
       - name: Deploy Application
         run: |
