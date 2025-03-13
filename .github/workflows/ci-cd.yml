@@ -52,8 +52,8 @@ jobs:
       - name: Install PM2
         run: npm install -g pm2  # Installs PM2 globally
 
-      - name: Start or Restart Application with PM2
+      - name: Start Application with PM2
         run: |
           echo "Deploying the Node.js application..."
-          pm2 list || pm2 start app.js --name app  # Start app if not running
+          pm2 start app.js --name app || echo "App is already running"  # Start app if it's not running
           pm2 restart app  # Restart the app if it's already running
