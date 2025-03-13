@@ -15,7 +15,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 18  # Ensures Node.js is installed
 
       - name: Install dependencies
         run: npm install
@@ -43,6 +43,11 @@ jobs:
 
       - name: Display test results
         run: cat test-results.txt
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18  # Ensure Node.js is set up for deployment too
 
       - name: Install PM2
         run: npm install -g pm2
