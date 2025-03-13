@@ -1,20 +1,15 @@
-name: Node.js CI/CD Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   test:
-    name: Run Tests
-    runs-on: [self-hosted, macOS]  
-
+    runs-on: [self-hosted, macOS]  # Runs on your self-hosted MacBook runner
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Node.js
@@ -22,40 +17,34 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm install
 
-      - name: Run Tests
+      - name: Run tests
         run: npm test | tee test-results.txt
 
-      - name: Upload Test Results
-        uses: actions/upload-artifact@v3
+      - name: Upload test results
+        uses: actions/upload-artifact@v4  # Updated to v4
         with:
           name: test-results
           path: test-results.txt
 
   deploy:
-    name: Deploy Application
-    needs: test
-    runs-on: [self-hosted, macOS]  
-
+    runs-on: [self-hosted, macOS]  # Runs on your self-hosted MacBook runner
+    needs: test  # Ensures tests pass before deployment
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Download Test Results
-        uses: actions/download-artifact@v3
+      - name: Download test results
+        uses: actions/download-artifact@v4  # Updated to v4
         with:
           name: test-results
 
-      - name: Display Test Results
+      - name: Display test results
         run: cat test-results.txt
 
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Start Application with PM2
+      - name: Deploy Application
         run: |
-          npm install -g pm2
-          pm2 stop app || true
-          pm2 start index.js --name "my-node-app"
+          echo "Deploying the Node.js application..."
+          pm2 restart app.js  # Modify this as needed for your deployment process
