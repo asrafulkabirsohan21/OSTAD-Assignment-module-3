@@ -15,7 +15,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18  # Ensures Node.js is installed
+          node-version: 18
 
       - name: Install dependencies
         run: npm install
@@ -30,8 +30,8 @@ jobs:
           path: test-results.txt
 
   deploy:
-    runs-on: [self-hosted, macOS]
-    needs: test  # Ensure tests pass before deployment
+    runs-on: [self-hosted, macOS]  # Runs on your self-hosted MacBook runner
+    needs: test  # Ensures that the deploy job runs only after the test job passes
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -47,12 +47,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18  # Ensure Node.js is set up for deployment too
+          node-version: 18  # Ensures Node.js is set up for deployment
 
       - name: Install PM2
-        run: npm install -g pm2
+        run: npm install -g pm2  # Installs PM2 globally
 
-      - name: Deploy Application
+      - name: Start or Restart Application with PM2
         run: |
           echo "Deploying the Node.js application..."
-          pm2 restart app.js  # Modify this as needed for your deployment process
+          pm2 list || pm2 start app.js --name app  # Start app if not running
+          pm2 restart app  # Restart the app if it's already running
