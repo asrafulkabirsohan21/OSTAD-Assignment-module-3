@@ -11,7 +11,7 @@ on:
 jobs:
   test:
     name: Run Tests
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS]  
 
     steps:
       - name: Checkout Repository
@@ -37,7 +37,7 @@ jobs:
   deploy:
     name: Deploy Application
     needs: test
-    runs-on: self-hosted # Using a self-hosted runner
+    runs-on: [self-hosted, macOS]  
 
     steps:
       - name: Checkout Repository
